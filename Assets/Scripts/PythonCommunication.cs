@@ -15,9 +15,11 @@ public class PythonCommunication: MonoBehaviour
     private Rigidbody rb;
     private Rigidbody rb2;
     //private ArticulationBody handAB;
-    //private Rigidbody hand;
+    private Rigidbody hand;
+    private Transform fingerL;
+    private Transform fingerR;
 
-    string tempStr = "0,0,0\t0,0,0\t0,0,0,1\t0,0,0\n0,0,0\t0,0,0\t0,0,0,1\t0,0,0\n0,0,0";
+    string tempStr = "0,0,0\t0,0,0\t0,0,0,1\t0,0,0\n0,0,0\t0,0,0\t0,0,0,1\t0,0,0\n0.123456789,0.123456789,0.123456789,0.04";
     UdpSocket udpSocket;
 
     public void QuitApp()
@@ -34,7 +36,7 @@ public class PythonCommunication: MonoBehaviour
     public void SendToPython()
     {
         udpSocket.SendData(sendToPythonText);
-        Debug.Log("Sent: " + sendToPythonText);
+        Debug.Log("Sent to Python: " + sendToPythonText);
     }
 
     private void Start()
@@ -59,7 +61,9 @@ public class PythonCommunication: MonoBehaviour
         rb = GameObject.Find("Block").GetComponent<Rigidbody>();
         rb2 = GameObject.Find("Block2").GetComponent<Rigidbody>();
         //handAB = GameObject.Find("python_hand").GetComponent<ArticulationBody>();
-        //hand = GameObject.Find("python_hand").GetComponent<Rigidbody>();
+        hand = GameObject.Find("python_hand").GetComponent<Rigidbody>();
+        fingerR = GameObject.Find("fingerR").GetComponent<Transform>();
+        fingerL = GameObject.Find("fingerL").GetComponent<Transform>();
         recordTransform = GameObject.Find("panda_1_hand_tcp").GetComponent<Transform>();
         udpSocket = FindObjectOfType<UdpSocket>();
         articulationChain = GameObject.Find("panda_1_link8").GetComponentsInChildren<ArticulationBody>();
@@ -106,15 +110,18 @@ public class PythonCommunication: MonoBehaviour
         var split_input = pythonRcvdText.Split('\n');
         MoveBlock(split_input[0], rb);
         MoveBlock(split_input[1], rb2);
-        //var hand_float = new List<float>(3);
-        //foreach (string item in split_input[2].Split(','))
-        //{
-        //    hand_float.Add(float.Parse(item));
-        //}
-        //Vector3 hand_position = new Vector3(hand_float[0], hand_float[1], hand_float[2]);
+        var hand_float = new List<float>(4);
+        foreach (string item in split_input[2].Split(','))
+        {
+            hand_float.Add(float.Parse(item));
+        }
+        Debug.Log(hand_float[0]);
+        Vector3 hand_position = new Vector3(hand_float[0], hand_float[1], hand_float[2]);
         //handAB.TeleportRoot(hand_position);
-        //hand.position = hand_position;
-        sendToPythonText = recordTransform.position.ToString() + "\t" + articulationChain[2].xDrive.target.ToString();
+        hand.position = hand_position;
+        fingerR.localPosition = new Vector3(hand_float[3] / 2, -0.0454f, 0f);
+        fingerL.localPosition = new Vector3(-hand_float[3] / 2, -0.0454f, 0f);
+        sendToPythonText = recordTransform.position.ToString("F5") + "\t" + articulationChain[2].xDrive.target.ToString("F5");
         SendToPython();            
     }
 }
