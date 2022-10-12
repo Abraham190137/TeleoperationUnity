@@ -12,7 +12,7 @@ import UdpComms as U
 import time
 
 # Create UDP socket to use for sending (and receiving)
-sock = U.UdpComms(udpIP="192.168.137.227", portTX=8000, portRX=8001, enableRX=True, suppressWarnings=True)
+sock = U.UdpComms(udpIP="172.26.2.120", sendIP = "172.26.35.223", portTX=8000, portRX=8001, enableRX=True, suppressWarnings=False)
 
 i = 0
 
@@ -25,4 +25,4 @@ while True:
     if data != None: # if NEW data has been received since last ReadReceivedData function call
         print(data) # print new received data
 
-    # time.sleep(1)
+    time.sleep(1)

@@ -7,7 +7,7 @@
 # Use under the Apache License 2.0
 
 class UdpComms():
-    def __init__(self,udpIP,portTX,portRX,enableRX=False,suppressWarnings=True):
+    def __init__(self,udpIP, sendIP,portTX,portRX,enableRX=False,suppressWarnings=True):
         """
         Constructor
         :param udpIP: Must be string e.g. "127.0.0.1"
@@ -20,6 +20,7 @@ class UdpComms():
         import socket
 
         self.udpIP = udpIP
+        self.sendIP = sendIP
         self.udpSendPort = portTX
         self.udpRcvPort = portRX
         self.enableRX = enableRX
@@ -47,7 +48,7 @@ class UdpComms():
 
     def SendData(self, strToSend):
         # Use this function to send string to C#
-        self.udpSock.sendto(bytes(strToSend,'utf-8'), (self.udpIP, self.udpSendPort))
+        self.udpSock.sendto(bytes(strToSend,'utf-8'), (self.sendIP, self.udpSendPort))
 
     def ReceiveData(self):
         """
