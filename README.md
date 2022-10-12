@@ -8,3 +8,6 @@ Instruction for use:
 - In File -> Build Settings, select the Android platform and click "Switch Platform".
 - Under Assets/Scenes, open the desired scene.
 - Fix any errors that apear in consol.
+
+Python Side:
+The Python folder contains 3 python files used for comunicating with Unity. server.py has a basic communication setup for testing the connection, server_env.py uses panda_gym to simulate the robot, with unity controlling the robots movements, and the simulation sending unity the resultant object pose info.
