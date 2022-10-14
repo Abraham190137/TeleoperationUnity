@@ -71,6 +71,7 @@ public class PythonCommunication: MonoBehaviour
         //articulationChain = GameObject.Find("panda_1_link8").GetComponentsInChildren<ArticulationBody>();
     }
 
+    //'name''/t''pose'\t'velocity'/t'rotation(quaternion)'\t'angularveleocity'\n
     void MoveBlock(string block_info, Rigidbody block)
     {
         var split_input = block_info.Split('\t');
@@ -145,7 +146,7 @@ public class PythonCommunication: MonoBehaviour
                         ObjectInventory.Remove(item_details[1]);
                     }
                 }
-                // ["_newItem", "type", "name", "size", "color"] tab deliminated
+                // ["_newItem", "type", "name", "size(3)", "color(4)"] tab deliminated
                 else if (item_name == "_newItem")
                 {
                     var item_details = item.Split("\t");
