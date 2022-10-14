@@ -44,8 +44,9 @@ public class TeleportHand : MonoBehaviour
         Quaternion current_rotation = myTransform.rotation;
 
         Quaternion rotation_correction = Quaternion.Euler(200, 180, 0);
+        Vector3 hand_offset = new Vector3(0f, 0.1034f, 0f);
 
-        Vector3 goal_position = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch) + camera_position;
+        Vector3 goal_position = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch) + camera_position + hand_offset;
         Quaternion goal_rotation = OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * rotation_correction;
 
         //Lock the hand to pointing down

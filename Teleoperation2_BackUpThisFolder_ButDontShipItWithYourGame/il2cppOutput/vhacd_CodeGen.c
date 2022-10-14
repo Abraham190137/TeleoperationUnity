@@ -49,15 +49,15 @@ static Il2CppTokenAdjustorThunkPair s_adjustorThunks[1] =
 };
 static const int32_t s_InvokerIndices[9] = 
 {
-	8485,
-	8387,
-	6028,
-	6028,
-	8327,
-	7193,
-	5752,
-	4217,
-	5752,
+	8493,
+	8395,
+	6033,
+	6033,
+	8335,
+	7198,
+	5757,
+	4221,
+	5757,
 };
 IL2CPP_EXTERN_C const Il2CppCodeGenModule g_vhacd_CodeGenModule;
 const Il2CppCodeGenModule g_vhacd_CodeGenModule = 

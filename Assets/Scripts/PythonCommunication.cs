@@ -18,8 +18,23 @@ public class PythonCommunication: MonoBehaviour
     private Rigidbody hand;
     private Transform fingerL;
     private Transform fingerR;
+    private Transform fingerL_goal;
+    private Transform fingerR_goal;
+    private float finger_goal = 0;
+    public float speed = 1;
+    private List<string> unknown_objects = new List<string>();
+    private string previous_message_id = "0";
+    public Vector3 virtual_walls_max = new Vector3(0.25f, 0.9f, 0.25f);
+    public Vector3 virtual_walls_min = new Vector3(-0.25f, 0f, -0.25f);
 
-    string tempStr = "0,0,0\t0,0,0\t0,0,0,1\t0,0,0\n0,0,0\t0,0,0\t0,0,0,1\t0,0,0\n0.123456789,0.123456789,0.123456789,0.04";
+    public Vector3 camera_position = new Vector3(0f, 0.35f, -0.5f);
+
+    string tempStr = "_init";//"_newItem\tblock\ttestBlock\t0.1,0.1,0.1\t128,128,128,1\n" +
+        //"rb\t0,0,0\t0,0,0\t0,0,0,1\t0,0,0\nrb2\t0,0,0\t0,0,0\t0,0,0,1\t0,0,0\n_hand\t0.123456789,0.123456789,0.123456789,0.00"; 
+
+    private Dictionary<string, Rigidbody> ObjectInventory = new Dictionary<string, Rigidbody>();
+
+
     UdpSocket udpSocket;
 
     public void QuitApp()
@@ -41,32 +56,19 @@ public class PythonCommunication: MonoBehaviour
 
     private void Start()
     {
-/*        string raw_input = "1,2,3\t4,5,6,7";
-        var split_input = raw_input.Split('\t');
-        var pose_str = split_input[0].Split(',');
-        var rot_str = split_input[1].Split(',');
-        var pose_float = new List<float>(3);
-        var rot_float = new List<float>(4);
-        foreach (string item in pose_str)
-            {
-            pose_float.Add(float.Parse(item));
-            }
-        foreach (string item in rot_str)
-        {
-            rot_float.Add(float.Parse(item));
-        }
-        var goal_position = new Vector3(pose_float[0], pose_float[1], pose_float[2]);
-        var goal_rotation = new Quaternion(rot_float[0], rot_float[1], rot_float[2], rot_float[3]);
-        Debug.Log(goal_rotation);*/
-        rb = GameObject.Find("Block").GetComponent<Rigidbody>();
-        rb2 = GameObject.Find("Block2").GetComponent<Rigidbody>();
-        //handAB = GameObject.Find("python_hand").GetComponent<ArticulationBody>();
+
+        //ObjectInventory.Add("rb", GameObject.Find("Block").GetComponent<Rigidbody>());
+        //ObjectInventory.Add("rb2", GameObject.Find("Block2").GetComponent<Rigidbody>());
+        //rb = GameObject.Find("Block").GetComponent<Rigidbody>();
+        //rb2 = GameObject.Find("Block2").GetComponent<Rigidbody>();
         hand = GameObject.Find("python_hand").GetComponent<Rigidbody>();
         fingerR = GameObject.Find("fingerR").GetComponent<Transform>();
         fingerL = GameObject.Find("fingerL").GetComponent<Transform>();
-        recordTransform = GameObject.Find("panda_1_hand_tcp").GetComponent<Transform>();
+        fingerL_goal = GameObject.Find("fingerL_goal").GetComponent<Transform>();
+        fingerR_goal = GameObject.Find("fingerR_goal").GetComponent<Transform>();
+        //recordTransform = GameObject.Find("panda_1_hand_tcp").GetComponent<Transform>();
         udpSocket = FindObjectOfType<UdpSocket>();
-        articulationChain = GameObject.Find("panda_1_link8").GetComponentsInChildren<ArticulationBody>();
+        //articulationChain = GameObject.Find("panda_1_link8").GetComponentsInChildren<ArticulationBody>();
     }
 
     void MoveBlock(string block_info, Rigidbody block)
@@ -76,19 +78,19 @@ public class PythonCommunication: MonoBehaviour
         var vel_float = new List<float>(3);
         var rot_float = new List<float>(4);
         var avel_float = new List<float>(3);
-        foreach (string item in split_input[0].Split(','))
+        foreach (string item in split_input[1].Split(','))
         {
             pose_float.Add(float.Parse(item));
         }
-        foreach (string item in split_input[1].Split(','))
+        foreach (string item in split_input[2].Split(','))
         {
             vel_float.Add(float.Parse(item));
         }
-        foreach (string item in split_input[2].Split(','))
+        foreach (string item in split_input[3].Split(','))
         {
             rot_float.Add(float.Parse(item));
         }
-        foreach (string item in split_input[3].Split(','))
+        foreach (string item in split_input[4].Split(','))
         {
             avel_float.Add(float.Parse(item));
         }
@@ -105,23 +107,127 @@ public class PythonCommunication: MonoBehaviour
 
     void Update()
     {
+        Quaternion rotation_correction = Quaternion.Euler(200, 180, 0);
+        Vector3 hand_offset = new Vector3(0f, 0.1034f, 0f);
+        Vector3 goal_position = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch) + camera_position - hand_offset;
+        Quaternion goal_rotation = OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * rotation_correction;
+        for (int i = 0; i < 3; i++)
+        {
+            goal_position[i] = Mathf.Clamp(goal_position[i], virtual_walls_min[i], virtual_walls_max[i]);
+        }
+            
+        //Lock the hand to pointing down
+        goal_rotation = Quaternion.Euler(180, 180, 0);
+
+        Vector2 ThumbstickInput = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick);
+        finger_goal += speed*ThumbstickInput[1]*Time.deltaTime;
+        finger_goal = Mathf.Clamp(finger_goal, 0f, 0.04f);
+        fingerL_goal.localPosition = new Vector3(-finger_goal, -0.0454f, 0f);
+        fingerR_goal.localPosition = new Vector3(finger_goal, -0.0454f, 0f);
+
         pythonRcvdText = tempStr;
         Debug.Log(tempStr);
         var split_input = pythonRcvdText.Split('\n');
-        MoveBlock(split_input[0], rb);
-        MoveBlock(split_input[1], rb2);
-        var hand_float = new List<float>(4);
-        foreach (string item in split_input[2].Split(','))
+        if (split_input[0] != previous_message_id)
         {
-            hand_float.Add(float.Parse(item));
+            previous_message_id = split_input[0];
+            foreach (string item in split_input[1..^0])
+            {
+                string item_name = item.Split("\t")[0];
+
+                // ["_deleteItem", "name"] tab deliminated
+                if (item_name == "_deleteItem")
+                {
+                    var item_details = item.Split("\t");
+                    if (ObjectInventory.ContainsKey(item_details[1]))
+                    {
+                        Destroy(ObjectInventory[item_details[1]].gameObject);
+                        ObjectInventory.Remove(item_details[1]);
+                    }
+                }
+                // ["_newItem", "type", "name", "size", "color"] tab deliminated
+                else if (item_name == "_newItem")
+                {
+                    var item_details = item.Split("\t");
+                    if (ObjectInventory.ContainsKey(item_details[2]))
+                    {
+                        Destroy(ObjectInventory[item_details[2]].gameObject);
+                        ObjectInventory.Remove(item_details[2]);
+                    }
+
+                    if (item_details[1] == "block")
+                    {
+                        var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        cube.AddComponent<Rigidbody>();
+                        cube.GetComponent<Rigidbody>().useGravity = false;
+                        Destroy(cube.GetComponent<BoxCollider>());
+                        cube.name = item_details[2];
+
+                        var size_float = new List<float>(3);
+                        foreach (string size_component in item_details[3].Split(','))
+                        {
+                            size_float.Add(float.Parse(size_component));
+                        }
+                        cube.transform.localScale = new Vector3(size_float[0], size_float[1], size_float[2]);
+
+                        var color_float = new List<float>(4);
+                        foreach (string color_component in item_details[4].Split(','))
+                        {
+                            color_float.Add(float.Parse(color_component));
+                        }
+                        Color newColor = new Color(color_float[0] / 255f, color_float[1] / 255f, color_float[2] / 255f, color_float[3]);
+                        cube.GetComponent<Renderer>().material.color = newColor;
+                        ObjectInventory.Add(item_details[2], cube.GetComponent<Rigidbody>());
+                        while (unknown_objects.Contains(item_details[2]))
+                        {
+                            unknown_objects.Remove(item_details[2]);
+                        }
+                    }
+                }
+                else if (item_name == "_hand")
+                {
+                    var hand_float = new List<float>(4);
+                    foreach (string hand_item in item.Split("\t")[1].Split(','))
+                    {
+                        hand_float.Add(float.Parse(hand_item));
+                    }
+                    hand.position = new Vector3(hand_float[0], hand_float[1], hand_float[2]);
+                    fingerR.localPosition = new Vector3(hand_float[3] / 2, -0.0454f, 0f);
+                    fingerL.localPosition = new Vector3(-hand_float[3] / 2, -0.0454f, 0f);
+                    if (Mathf.Abs(hand_float[3]/2 - finger_goal) > 0.01)
+                    {
+                        OVRInput.SetControllerVibration(1f, Mathf.Abs(hand_float[3] / 2f - finger_goal) / 0.04f, OVRInput.Controller.RTouch);
+                    } else
+                    {
+                        OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.RTouch);
+                    }
+                } else if (ObjectInventory.ContainsKey(item_name)) {
+                    MoveBlock(item, ObjectInventory[item_name]);
+                } else if (!unknown_objects.Contains(item_name) && item_name != "_init") {
+                    unknown_objects.Add(item_name);
+                }
+            }
         }
-        Debug.Log(hand_float[0]);
-        Vector3 hand_position = new Vector3(hand_float[0], hand_float[1], hand_float[2]);
-        //handAB.TeleportRoot(hand_position);
-        hand.position = hand_position;
-        fingerR.localPosition = new Vector3(hand_float[3] / 2, -0.0454f, 0f);
-        fingerL.localPosition = new Vector3(-hand_float[3] / 2, -0.0454f, 0f);
-        sendToPythonText = recordTransform.position.ToString("F5") + "\t" + articulationChain[2].xDrive.target.ToString("F5");
+
+        string unknown_objects_message = "_unknown";
+        Debug.Log(unknown_objects);
+        foreach(string object_name in unknown_objects) {
+            unknown_objects_message += "\t" + object_name;
+        }
+        //MoveBlock(split_input[0], ObjectInventory["rb"]);
+        //MoveBlock(split_input[1], ObjectInventory["rb2"]);
+        //var hand_float = new List<float>(4);
+        //foreach (string item in split_input[2].Split(','))
+        //{
+        //    hand_float.Add(float.Parse(item));
+        //}
+        //Debug.Log(hand_float[0]);
+        //Vector3 hand_position = new Vector3(hand_float[0], hand_float[1], hand_float[2]);
+        ////handAB.TeleportRoot(hand_position);
+        //hand.position = hand_position;
+        //fingerR.localPosition = new Vector3(hand_float[3] / 2, -0.0454f, 0f);
+        //fingerL.localPosition = new Vector3(-hand_float[3] / 2, -0.0454f, 0f);
+        sendToPythonText = unknown_objects_message + '\n' + goal_position.ToString("F5") + "\t" + finger_goal.ToString("F5");
         SendToPython();            
     }
 }
