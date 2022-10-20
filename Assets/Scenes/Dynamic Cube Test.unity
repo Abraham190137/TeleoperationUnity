@@ -1155,7 +1155,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 95a8544f6ca5ec944a20ba9735afb581, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 95a8544f6ca5ec944a20ba9735afb581, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1163,7 +1163,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 95a8544f6ca5ec944a20ba9735afb581, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 95a8544f6ca5ec944a20ba9735afb581, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2991,6 +2991,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: hand
       objectReference: {fileID: 0}
+    - target: {fileID: 7374791279145423755, guid: 81f326531d0d9d14b94d5e064307bff2, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 1689236334831949280, guid: 81f326531d0d9d14b94d5e064307bff2, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f326531d0d9d14b94d5e064307bff2, type: 3}
 --- !u!1 &1438256559
@@ -4015,6 +4019,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.1
+  virtual_walls_max: {x: 0.25, y: 0.9, z: 0.25}
+  virtual_walls_min: {x: -0.25, y: 0, z: -0.25}
   camera_position: {x: 0, y: 0.35, z: -0.5}
 --- !u!114 &1903188271
 MonoBehaviour:
@@ -4029,7 +4035,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTxStarted: 0
-  IP: 172.26.50.211
+  IP: 172.26.10.20
   rxPort: 8000
   txPort: 8001
 --- !u!4 &1903188272

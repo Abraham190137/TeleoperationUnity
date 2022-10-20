@@ -24,6 +24,7 @@ game_objects = {"object1":{'type':'block', "size":"0.04,0.04,0.04", "color":"3,2
                 "object2":{'type':'block', "size":"0.04,0.04,0.04", "color":"3,250,21,1"}}
 
 new_object_list = []
+inventory_list = []
 message_index = 1
 send_update_time = time.time()
 sim_update_time = time.time()
@@ -46,11 +47,19 @@ def object_message(object_name):
     + str(rot[1]) + ',' + str(-rot[2]) + ',' + str(-rot[0]) + ',' + str(rot[3]) + '\t' \
     + str(avel[1]) + ',' + str(-avel[2]) + ',' + str(-avel[0])
 
+i = 0
+
 while True:
     hand_position = env.robot.get_ee_position()
     finder_width = env.robot.get_fingers_width()
     send_string = str(message_index) + '\n'
     message_index += 1
+    for item in inventory_list:
+        if not (item in game_objects.keys()):
+            send_string += "_deleteItem" + '\t' + item + '\n'
+    for item in game_objects.keys():
+        if not(item in inventory_list) and not(item in new_object_list):
+            new_object_list.append(item)
     if len(new_object_list) != 0:
         send_string += new_object_message(new_object_list, game_objects)
     for game_object in game_objects:
@@ -65,15 +74,21 @@ while True:
         data = sock.ReadReceivedData() # read data
 
         if data != None: # if NEW data has been received since last ReadReceivedData function call
-            print(data)
-            unknown_objects, gripper_data = data.split('\n')
+            i += 1
+            print(i)
+            #print(data)
+            inventory, unknown_objects, gripper_data = data.split('\n')
+            inventory_list = inventory.split('\t')[1:]
             new_object_list = unknown_objects.split('\t')[1:]
             #new_object_list = ['object1', 'object2']
-            print(new_object_list)
+            #print(new_object_list)
             position, finger = gripper_data.split('\t')
             position = np.array(position[1:-1].split(', ')).astype(np.float)
             position = np.array([position[2], -position[0], position[1]])
             gripper = 2*float(finger)
+
+            if i == 100:
+                del game_objects['object1']
 
     error = np.zeros(4)
     error[:3] = position - env.robot.get_ee_position()
@@ -82,5 +97,5 @@ while True:
     if time.time() > sim_update_time + 0.04:
         sim_update_time = time.time()
         next_env_dict, reward, done, info = env.step(10*np.array([1, 1, 1, 0.07])*error)
-    
+
 env.close() # close the sim

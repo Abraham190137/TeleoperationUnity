@@ -6,11 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/SimpleTeleoperation.unity
+    path: Assets/Scenes/OldSceneDoNotUse.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Start Screen.unity
+    guid: 5bf31173b687cfa48b7a50b0679071ba
   - enabled: 1
     path: Assets/Scenes/Dynamic Cube Test.unity
     guid: f005fcb565e3ebe449ed3ae6928c32b0
+  - enabled: 0
+    path: Assets/Scenes/Start Menu.unity
+    guid: f0bc1b6f8c7b8354cb0957c0941ef94a
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 005631c95bd07bc408fcf0e6a22ff2d3, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 191008647e434da48b7cd80a4eb36cf6, type: 2}

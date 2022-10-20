@@ -19,6 +19,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Linq;
 
 public class UdpSocket : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class UdpSocket : MonoBehaviour
     Thread receiveThread; // Receiving Thread
 
     PythonCommunication pythonComm;
+    IPManager ipManager;
 
 
     //IEnumerator SendDataCoroutine() // DELETE THIS: Added to show sending data from Unity to Python via UDP
@@ -59,9 +61,34 @@ public class UdpSocket : MonoBehaviour
         }
     }
 
+    public bool ValidateIPv4(string ipString)
+    {
+        if (String.IsNullOrWhiteSpace(ipString))
+        {
+            return false;
+        }
+
+        string[] splitValues = ipString.Split('.');
+        if (splitValues.Length != 4)
+        {
+            return false;
+        }
+
+        byte tempForParsing;
+
+        return splitValues.All(r => byte.TryParse(r, out tempForParsing));
+    }
+
     void Awake()
     {
         // Create remote endpoint (to Matlab) 
+        ipManager = FindObjectOfType<IPManager>();
+        Debug.Log(ipManager.ReturnIP());
+        string enteredIP = ipManager.ReturnIP();
+        if (ValidateIPv4(enteredIP))
+        {
+            IP = enteredIP;
+        }
         remoteEndPoint = new IPEndPoint(IPAddress.Parse(IP), txPort);
 
         // Create local client

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class PythonCommunication: MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PythonCommunication: MonoBehaviour
     //[SerializeField] TextMeshProUGUI sendToPythonText = null;
     string pythonRcvdText;
     string sendToPythonText = "start";
+    bool allowMove = false;
 
     private ArticulationBody[] articulationChain;
     private Transform recordTransform;
@@ -26,20 +28,20 @@ public class PythonCommunication: MonoBehaviour
     private string previous_message_id = "0";
     public Vector3 virtual_walls_max = new Vector3(0.25f, 0.9f, 0.25f);
     public Vector3 virtual_walls_min = new Vector3(-0.25f, 0f, -0.25f);
-
     public Vector3 camera_position = new Vector3(0f, 0.35f, -0.5f);
+    private Vector3 goal_position;
 
-    string tempStr = "_init";//"_newItem\tblock\ttestBlock\t0.1,0.1,0.1\t128,128,128,1\n" +
-        //"rb\t0,0,0\t0,0,0\t0,0,0,1\t0,0,0\nrb2\t0,0,0\t0,0,0\t0,0,0,1\t0,0,0\n_hand\t0.123456789,0.123456789,0.123456789,0.00"; 
+    string tempStr = "_init";
 
     private Dictionary<string, Rigidbody> ObjectInventory = new Dictionary<string, Rigidbody>();
 
+    string enteredIP;
 
     UdpSocket udpSocket;
 
     public void QuitApp()
     {
-        Debug.Log("Quitting");
+        //]Debug.Log("Quitting");
         Application.Quit();
     }
 
@@ -51,7 +53,7 @@ public class PythonCommunication: MonoBehaviour
     public void SendToPython()
     {
         udpSocket.SendData(sendToPythonText);
-        Debug.Log("Sent to Python: " + sendToPythonText);
+        //Debug.Log("Sent to Python: " + sendToPythonText);
     }
 
     private void Start()
@@ -108,26 +110,44 @@ public class PythonCommunication: MonoBehaviour
 
     void Update()
     {
-        Quaternion rotation_correction = Quaternion.Euler(200, 180, 0);
-        Vector3 hand_offset = new Vector3(0f, 0.1034f, 0f);
-        Vector3 goal_position = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch) + camera_position - hand_offset;
-        Quaternion goal_rotation = OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * rotation_correction;
-        for (int i = 0; i < 3; i++)
+        if (OVRInput.GetDown(OVRInput.Button.Two))
         {
-            goal_position[i] = Mathf.Clamp(goal_position[i], virtual_walls_min[i], virtual_walls_max[i]);
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Start Screen");
         }
-            
-        //Lock the hand to pointing down
-        goal_rotation = Quaternion.Euler(180, 180, 0);
+        if (OVRInput.GetDown(OVRInput.Button.One)) {
+            if (allowMove)
+            {
+                allowMove = false;
+                GameObject.Find("node5").GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+            } else
+            {
+                allowMove = true;
+                GameObject.Find("node5").GetComponent<Renderer>().material.SetColor("_Color", Color.white);
+            }
+        }
+        if (allowMove)
+        {
+            Quaternion rotation_correction = Quaternion.Euler(200, 180, 0);
+            Vector3 hand_offset = new Vector3(0f, 0.1034f, 0f);
+            goal_position = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch) + camera_position - hand_offset;
+            Quaternion goal_rotation = OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * rotation_correction;
+            for (int i = 0; i < 3; i++)
+            {
+                goal_position[i] = Mathf.Clamp(goal_position[i], virtual_walls_min[i], virtual_walls_max[i]);
+            }
 
-        Vector2 ThumbstickInput = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick);
-        finger_goal += speed*ThumbstickInput[1]*Time.deltaTime;
-        finger_goal = Mathf.Clamp(finger_goal, 0f, 0.04f);
-        fingerL_goal.localPosition = new Vector3(-finger_goal, -0.0454f, 0f);
-        fingerR_goal.localPosition = new Vector3(finger_goal, -0.0454f, 0f);
+            //Lock the hand to pointing down
+            goal_rotation = Quaternion.Euler(180, 180, 0);
 
+            Vector2 ThumbstickInput = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick);
+            finger_goal += speed * ThumbstickInput[1] * Time.deltaTime;
+            finger_goal = Mathf.Clamp(finger_goal, 0f, 0.04f);
+            fingerL_goal.localPosition = new Vector3(-finger_goal, -0.0454f, 0f);
+            fingerR_goal.localPosition = new Vector3(finger_goal, -0.0454f, 0f);
+        }
+        
         pythonRcvdText = tempStr;
-        Debug.Log(tempStr);
+        //Debug.Log(tempStr);
         var split_input = pythonRcvdText.Split('\n');
         if (split_input[0] != previous_message_id)
         {
@@ -209,11 +229,16 @@ public class PythonCommunication: MonoBehaviour
                 }
             }
         }
-
+        string inventory_list = "_inventory";
         string unknown_objects_message = "_unknown";
-        Debug.Log(unknown_objects);
+        //Debug.Log(unknown_objects);
         foreach(string object_name in unknown_objects) {
             unknown_objects_message += "\t" + object_name;
+        }
+
+        foreach (string item_name in ObjectInventory.Keys)
+        {
+            inventory_list += "\t" + item_name;
         }
         //MoveBlock(split_input[0], ObjectInventory["rb"]);
         //MoveBlock(split_input[1], ObjectInventory["rb2"]);
@@ -228,7 +253,7 @@ public class PythonCommunication: MonoBehaviour
         //hand.position = hand_position;
         //fingerR.localPosition = new Vector3(hand_float[3] / 2, -0.0454f, 0f);
         //fingerL.localPosition = new Vector3(-hand_float[3] / 2, -0.0454f, 0f);
-        sendToPythonText = unknown_objects_message + '\n' + goal_position.ToString("F5") + "\t" + finger_goal.ToString("F5");
+        sendToPythonText = inventory_list + '\n' + unknown_objects_message + '\n' + goal_position.ToString("F5") + "\t" + finger_goal.ToString("F5");
         SendToPython();            
     }
 }
