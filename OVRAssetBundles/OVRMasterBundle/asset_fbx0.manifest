@@ -1,0 +1,33 @@
+ManifestFileVersion: 0
+CRC: 1626258621
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 80dba1e9a35d83dfa485dfec0a143e1e
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 879e52b0380d6c020d77ff9149671152
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Oculus/VR/Meshes/OculusTouchForQuest2/OculusTouchForQuest2_Right.fbx
+- Assets/Oculus/VR/Meshes/OculusTouchForQuest2/OculusTouchForQuest2_Left.fbx
+Dependencies:
+- D:/Abraham/Teleoperation/TeleoperationUnity/OVRAssetBundles/OVRMasterBundle/asset_mat0

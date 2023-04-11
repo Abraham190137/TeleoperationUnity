@@ -65,7 +65,8 @@ class UdpComms():
 
         data = None
         try:
-            data, _ = self.udpSock.recvfrom(1024)
+            #data, _ = self.udpSock.recvfrom(1024)
+            data, _ = self.udpSock.recvfrom(8192)
             data = data.decode('utf-8')
         except WindowsError as e:
             if e.winerror == 10054: # An error occurs if you try to receive before connecting to other application

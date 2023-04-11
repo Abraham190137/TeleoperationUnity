@@ -1,0 +1,18 @@
+ManifestFileVersion: 0
+CRC: 1505556498
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 6378d5ef15e305530d07cc90800a9a29
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 78b4eb24b215c292a3fbe4dfa013d0e8
+HashAppended: 0
+ClassTypes:
+- Class: 43
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/panda_urdf/franka_description/meshes/collision/hand_0.asset
+- Assets/panda_urdf/franka_description/meshes/collision/hand_1.asset
+Dependencies: []

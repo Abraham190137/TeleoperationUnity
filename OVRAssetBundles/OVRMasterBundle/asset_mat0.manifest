@@ -1,0 +1,30 @@
+ManifestFileVersion: 0
+CRC: 2589709957
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a9a89b63305514c912dcaadc1e65befe
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 82515b3694a1e5beae009c48c1198c34
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Materials/Goal2.mat
+- Assets/Oculus/VR/Materials/BasicHandMaterial.mat
+- Assets/Materials/NavyFloor.mat
+- Assets/Oculus/SampleFramework/Usage/Locomotion/Materials/DebugDrawLine.mat
+- Assets/Materials/UnityHand.mat
+- Assets/Materials/Goal.mat
+- Assets/Materials/Base.mat
+- Assets/Oculus/VR/Meshes/OculusTouchForQuest2/Materials/OculusTouchForQuest2_MAT.mat
+Dependencies:
+- D:/Abraham/Teleoperation/TeleoperationUnity/OVRAssetBundles/OVRMasterBundle/asset_png0
+- D:/Abraham/Teleoperation/TeleoperationUnity/OVRAssetBundles/OVRMasterBundle/asset_tga0

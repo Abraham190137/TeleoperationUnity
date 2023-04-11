@@ -1,0 +1,30 @@
+ManifestFileVersion: 0
+CRC: 1616986491
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 7479c40268cf53b94899e17ca80b2252
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: fee1c6e80ce93dc43c78a279afa71396
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/panda_urdf/franka_description/meshes/visual/finger.dae
+- Assets/panda_urdf/franka_description/meshes/visual/hand.dae
+Dependencies: []

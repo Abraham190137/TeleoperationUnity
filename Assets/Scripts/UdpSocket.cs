@@ -37,17 +37,6 @@ public class UdpSocket : MonoBehaviour
     PythonCommunication pythonComm;
     IPManager ipManager;
 
-
-    //IEnumerator SendDataCoroutine() // DELETE THIS: Added to show sending data from Unity to Python via UDP
-    //{
-    //    while (true)
-    //    {
-    //        SendData("Sent from Unity: " + i.ToString());
-    //        i++;
-    //        yield return new WaitForSeconds(1f);
-    //    }
-    //}
-
     public void SendData(string message) // Use to send data to Python
     {
         try
@@ -83,7 +72,6 @@ public class UdpSocket : MonoBehaviour
     {
         // Create remote endpoint (to Matlab) 
         ipManager = FindObjectOfType<IPManager>();
-        Debug.Log(ipManager.ReturnIP());
         string enteredIP = ipManager.ReturnIP();
         if (ValidateIPv4(enteredIP))
         {
@@ -103,7 +91,6 @@ public class UdpSocket : MonoBehaviour
         // Initialize (seen in comments window)
         print("UDP Comms Initialised");
 
-        //StartCoroutine(SendDataCoroutine()); // DELETE THIS: Added to show sending data from Unity to Python via UDP
     }
 
     private void Start() 
@@ -116,11 +103,14 @@ public class UdpSocket : MonoBehaviour
     {
         while (true)
         {
+            Debug.Log("running ReceiveData");
             try
             {
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
                 byte[] data = client.Receive(ref anyIP);
+                Debug.Log(data);
                 string text = Encoding.UTF8.GetString(data);
+                Debug.Log(text);
                 //print(">> " + text);
                 ProcessInput(text);
             }

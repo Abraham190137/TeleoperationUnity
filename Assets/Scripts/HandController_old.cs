@@ -2,12 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System;
 
-public class HandController : MonoBehaviour
+public class HandController_HandTracking : MonoBehaviour
 {
-    private bool use_robot_hand = false;
-    private string finger_angles_message = "";
     private bool allowMove;
     private Rigidbody hand;
     private Transform fingerL;
@@ -21,14 +18,12 @@ public class HandController : MonoBehaviour
     public Vector3 virtual_walls_min = new Vector3(-0.25f, 0f, -0.25f);
     public Vector3 camera_position = new Vector3(0f, 0.35f, -0.5f);
     public Vector3 RotationCorrectionEuler = new Vector3(200f, 180f, 0f);
-    private Quaternion rotation_correction;
-    private Quaternion hand_rot_correction = Quaternion.Euler(160, 90, 0);
     private Vector3 hand_offset = new Vector3(0f, 0.1034f, 0f);
-    private Vector3 hand_detect_offset = new Vector3(0f, 0.07f, 0.05f);
     private Vector3 goal_position = new Vector3(0f, 0.1f, 0.2f);
     private Vector3 goal_position_new;
     private Quaternion goal_rotation = Quaternion.Euler(180, 180, 0);
     private Quaternion goal_rotation_new;
+    private Quaternion rotation_correction;
     private Vector3[] bounding_points_hand = { new Vector3 { x = -0.1f, y = -0.1125f,  z = -0.025f}, //A
                                                new Vector3 { x = 0.1f,  y = -0.1125f,  z = -0.025f},  //B
                                                new Vector3 { x = 0.1f,  y = -0.1125f,  z = 0.025f}, //C
@@ -60,17 +55,10 @@ public class HandController : MonoBehaviour
         //virtual_walls_min = new Vector3(-0.3f, -0.05f, -0.3f);
 }
 
-    public string GetFingerGoalMessage()
+    public float GetFingerGoal()
     {
-        if (use_robot_hand)
-        {
-            return finger_angles_message;
-        }
-        else
-        {
-            return finger_goal.ToString("F5") + '\t'; //add tab to make everything consistent.
+        return finger_goal;
     }
-        }
 
     public Vector3 GetGoalPosition()
     {
@@ -137,57 +125,13 @@ public class HandController : MonoBehaviour
         // Update the goal position to send over the socket
         if (allowMove)
         {
-            Vector3 controller_position;
-            Quaternion controller_rotation;
-            controller_rotation = OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch);
-            controller_position = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
+            // get the controller rotation and adjust (so that the hand is in a confortable resting position)
+            goal_rotation_new = OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * rotation_correction;
 
-            if (OVRPlugin.GetHandTrackingEnabled())
-            {
-                goal_rotation_new = controller_rotation * hand_rot_correction;
-                goal_position_new = controller_position + camera_position + goal_rotation * hand_detect_offset;
-            }
-            else
-            {
-                goal_rotation_new = controller_rotation * rotation_correction;
-                goal_position_new = controller_position + camera_position + goal_rotation * hand_offset;
-            }
-
-            OVRPlugin.HandState handState = default(OVRPlugin.HandState);
-
-            if (OVRPlugin.GetHandTrackingEnabled() && OVRPlugin.GetHandState(OVRPlugin.Step.Render, OVRPlugin.Hand.HandRight, ref handState) && handState.BoneRotations.Length > 18)
-            {
-                use_robot_hand = true;
-                Dictionary<string, int> finger_indices = new Dictionary<string, int>(){ //finger tips
-                    {"Thumb", 5},
-                    {"index", 8},
-                    {"middle", 11},
-                    {"ring", 14},
-                    {"pinky", 18} 
-                };
-                finger_angles_message = "";
-                foreach (KeyValuePair<string, int> kvp in finger_indices)
-                {
-                    Quaternion finger_tip = new Quaternion(handState.BoneRotations[kvp.Value].x, handState.BoneRotations[kvp.Value].y,
-                        handState.BoneRotations[kvp.Value].z, handState.BoneRotations[kvp.Value].w);
-
-                    Quaternion finger_mid = new Quaternion(handState.BoneRotations[kvp.Value - 1].x, handState.BoneRotations[kvp.Value - 1].y,
-                        handState.BoneRotations[kvp.Value - 1].z, handState.BoneRotations[kvp.Value - 1].w);
-
-                    Quaternion finger_base = new Quaternion(handState.BoneRotations[kvp.Value - 2].x, handState.BoneRotations[kvp.Value - 2].y,
-                        handState.BoneRotations[kvp.Value - 2].z, handState.BoneRotations[kvp.Value - 2].w);
-
-                    double finger_angle = 2 * Math.Acos((finger_mid * finger_tip).w);
-                    double nuckle_angle = 2 * Math.Acos((finger_base).w);
-                    finger_angles_message += (finger_angle + nuckle_angle).ToString("F5") + '\t';
-                }
-                //finger_angles_message = finger_angles_message[0..^1]; taken care of in python
-            }
-            else
-            {
-                use_robot_hand = false;
-            }
-
+            // get the controller location, and adjust it based on the camera postion (since hand location is based
+            // on distance from the camera) and hand offset (since the position sent over the socket is actually the
+            // finger tip location, not the hand base location)
+            goal_position_new = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch) + camera_position + goal_rotation*hand_offset;
             //Lock the hand to pointing down
             //goal_rotation = Quaternion.Euler(180, 180, 0);
 

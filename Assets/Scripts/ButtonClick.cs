@@ -18,7 +18,7 @@ public class ButtonClick : MonoBehaviour
 
 	public void TaskOnClick()
 	{
-		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Dynamic Cube Test");
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Main Scene");
 	}
 
 	public void PrintInput(string input_txt) 
@@ -43,9 +43,10 @@ public class ButtonClick : MonoBehaviour
 
 	void Update()
 	{
+		// This is included so that the main scene can be loaded when previewing in Unity.
 		if (Input.GetKeyDown("space"))
 		{
-			AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Dynamic Cube Test");
+			AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Main Scene");
 		}
 	}
 }
