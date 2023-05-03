@@ -3837,7 +3837,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1668475788}
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0.1859, z: 0}
+  m_LocalPosition: {x: 0, y: 0.48, z: -0.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3878,7 +3878,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2d9702f625065a4994b3fd71b25ff18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  use_hand_tracking: 1
   speed: 0.05
   virtual_walls_max: {x: 0.25, y: 0.9, z: 0.25}
   virtual_walls_min: {x: -0.25, y: 0, z: -0.25}

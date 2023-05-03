@@ -25,7 +25,7 @@ public class HandController : MonoBehaviour
     private Quaternion hand_rot_correction = Quaternion.Euler(160, 90, 0);
     private Vector3 hand_offset = new Vector3(0f, 0.1034f, 0f);
     private Vector3 hand_detect_offset = new Vector3(0f, 0.07f, 0.05f);
-    private Vector3 goal_position = new Vector3(0f, 0.1f, 0.2f);
+    private Vector3 goal_position = new Vector3(0f, 0.48f, -0.24f);
     private Vector3 goal_position_new;
     private Quaternion goal_rotation = Quaternion.Euler(180, 180, 0);
     private Quaternion goal_rotation_new;

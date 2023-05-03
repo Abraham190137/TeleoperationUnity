@@ -19,7 +19,7 @@ public class HandController_HandTracking : MonoBehaviour
     public Vector3 camera_position = new Vector3(0f, 0.35f, -0.5f);
     public Vector3 RotationCorrectionEuler = new Vector3(200f, 180f, 0f);
     private Vector3 hand_offset = new Vector3(0f, 0.1034f, 0f);
-    private Vector3 goal_position = new Vector3(0f, 0.1f, 0.2f);
+    private Vector3 goal_position = new Vector3(0f, 0.48f, -0.29f);
     private Vector3 goal_position_new;
     private Quaternion goal_rotation = Quaternion.Euler(180, 180, 0);
     private Quaternion goal_rotation_new;
