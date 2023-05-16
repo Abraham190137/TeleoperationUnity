@@ -24281,22 +24281,6 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void HandController_MoveHandSelf_mC389B94E40A
 		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_3 = __this->___goal_rotation_25;
 		NullCheck(L_2);
 		Rigidbody_set_rotation_mF2FC85A4A26AD9FED7DE0061889DF5A408461A5D(L_2, L_3, NULL);
-		// fingerR.localPosition = new Vector3(finger_goal, -0.0454f, 0f);
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_4 = __this->___fingerR_9;
-		float L_5 = __this->___finger_goal_12;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6;
-		memset((&L_6), 0, sizeof(L_6));
-		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_6), L_5, (-0.0454000011f), (0.0f), /*hidden argument*/NULL);
-		NullCheck(L_4);
-		Transform_set_localPosition_mDE1C997F7D79C0885210B7732B4BA50EE7D73134(L_4, L_6, NULL);
-		// fingerL.localPosition = new Vector3(-finger_goal, -0.0454f, 0f);
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_7 = __this->___fingerL_8;
-		float L_8 = __this->___finger_goal_12;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_9;
-		memset((&L_9), 0, sizeof(L_9));
-		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_9), ((-L_8)), (-0.0454000011f), (0.0f), /*hidden argument*/NULL);
-		NullCheck(L_7);
-		Transform_set_localPosition_mDE1C997F7D79C0885210B7732B4BA50EE7D73134(L_7, L_9, NULL);
 		// }
 		return;
 	}
@@ -25111,10 +25095,10 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void HandController__ctor_mC7FBA1DBB0123D91F5
 		memset((&L_7), 0, sizeof(L_7));
 		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_7), (0.0f), (0.0700000003f), (0.0500000007f), /*hidden argument*/NULL);
 		__this->___hand_detect_offset_22 = L_7;
-		// private Vector3 goal_position = new Vector3(0f, 0.48f, -0.29f);
+		// private Vector3 goal_position = new Vector3(0f, 0.48f, -0.24f);
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8;
 		memset((&L_8), 0, sizeof(L_8));
-		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_8), (0.0f), (0.479999989f), (-0.289999992f), /*hidden argument*/NULL);
+		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_8), (0.0f), (0.479999989f), (-0.239999995f), /*hidden argument*/NULL);
 		__this->___goal_position_23 = L_8;
 		// private Quaternion goal_rotation = Quaternion.Euler(180, 180, 0);
 		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_9;

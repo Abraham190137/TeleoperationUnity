@@ -110,8 +110,8 @@ public class HandController : MonoBehaviour
     {
         hand.position = goal_position;
         hand.rotation = goal_rotation;
-        fingerR.localPosition = new Vector3(finger_goal, -0.0454f, 0f);
-        fingerL.localPosition = new Vector3(-finger_goal, -0.0454f, 0f);
+        //fingerR.localPosition = new Vector3(finger_goal, -0.0454f, 0f);
+        //fingerL.localPosition = new Vector3(-finger_goal, -0.0454f, 0f);
     }
 
     // update is called once per frame
