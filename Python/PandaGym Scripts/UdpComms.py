@@ -7,7 +7,7 @@
 # Use under the Apache License 2.0
 
 class UdpComms():
-    def __init__(self,udpIP, sendIP, portTX,portRX,enableRX=False,suppressWarnings=True):
+    def __init__(self,udpIP, sendIP,portTX,portRX,enableRX=False,suppressWarnings=True):
         """
         Constructor
         :param udpIP: Must be string e.g. "127.0.0.1"
@@ -65,7 +65,8 @@ class UdpComms():
 
         data = None
         try:
-            data, _ = self.udpSock.recvfrom(1024)
+            #data, _ = self.udpSock.recvfrom(1024)
+            data, _ = self.udpSock.recvfrom(8192)
             data = data.decode('utf-8')
         except WindowsError as e:
             if e.winerror == 10054: # An error occurs if you try to receive before connecting to other application

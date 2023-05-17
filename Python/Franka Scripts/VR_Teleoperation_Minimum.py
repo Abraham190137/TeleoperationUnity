@@ -160,8 +160,6 @@ if __name__ == "__main__":
 	fa.reset_joints()
 	fa.close_gripper()
 	fa.goto_gripper(0.04)
-	print(fa.get_pose())
-	exit()
 
 	# Initalize the VR controller:
 	TeleopController = Teleoperation(franka_IP = "172.26.18.135", Oculus_IP = "172.26.16.192")

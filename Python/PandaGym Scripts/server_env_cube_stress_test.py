@@ -8,9 +8,8 @@ from panda_gym.envs.panda_tasks.panda_stack import PandaStackEnv
     
 # Create UDP socket to use for sending (and receiving) Use THIS machines IP
 sock = U.UdpComms(udpIP="172.26.48.36", sendIP = "172.26.33.175", portTX=8000, portRX=8001, enableRX=True, suppressWarnings=False)
-# sock = U.UdpComms(udpIP="172.26.50.82", sendIP = "172.26.89.114", portTX=8000, portRX=8001, enableRX=True, suppressWarnings=False)
 
-env = PandaStackEnv(render = False)#, control_type = 'joints') # task enviroment
+env = PandaStackEnv(render = False) # task enviroment
 env.reset()
 position = env.robot.get_ee_position()
 gripper = env.robot.get_fingers_width()
@@ -143,7 +142,6 @@ while True:
             unity_latency.append(time.time() - unity_last_time)
             unity_last_time = time.time()
 
-            # print(unity_latency[-1])
             for ghost in ghost_objects.values():
                 ghost.update(unity_latency[-1])
 
@@ -176,10 +174,6 @@ while True:
                 ghost_name = 'g' + str(len(ghost_objects))
                 ghost_objects[ghost_name] = ghost_object(ghost_name)
 
-            # if i%100 == 0:
-            #     for j in range(100):
-            #         ghost_name = 'ghost_' + str(len(ghost_objects))
-            #         ghost_objects[ghost_name] = ghost_object(ghost_name)
 
     if time.time() > sim_update_time + ENV_STEP_PERIOD: # each env step takes 40ms, so step env every 0.04 seconds
         sim_update_time += ENV_STEP_PERIOD
@@ -187,5 +181,3 @@ while True:
         error[:3] = position - env.robot.get_ee_position()
         error[3] = gripper - env.robot.get_fingers_width()
         next_env_dict, reward, done, info = env.step(10*np.array([1, 1, 1, 0.07])*error)
-
-env.close() # close the sim
