@@ -135,6 +135,9 @@ public class PythonCommunication: MonoBehaviour
         {
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Start Screen");
         }
+
+        // Uncomment the following line to have the hand directly follow the user's input (rather than the
+        // message from the UDP Socket). Used for debugging purposes.
         //hand_controller.MoveHandSelf();
         pythonRcvdText = tempStr;
         var split_input = pythonRcvdText.Split('\n');

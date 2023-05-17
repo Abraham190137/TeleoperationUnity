@@ -6,6 +6,8 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using UnityEngine.SceneManagement;
 
+// Script to govern the behavior of button in the start scene
+
 public class ButtonClick : MonoBehaviour
 {
 	IPManager ipManager;
@@ -34,7 +36,6 @@ public class ButtonClick : MonoBehaviour
 		{
 			if (ip.AddressFamily == AddressFamily.InterNetwork)
 			{
-				//hintText.text = ip.ToString();
 				return ip.ToString();
 			}
 		}

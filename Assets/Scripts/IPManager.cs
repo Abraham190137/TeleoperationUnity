@@ -9,7 +9,6 @@ using UnityEngine.SceneManagement;
 public class IPManager : MonoBehaviour
 {
 	private string enteredIP = "none";
-	//public Text hintText;
 
 	void Start()
 	{

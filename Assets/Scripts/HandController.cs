@@ -56,8 +56,6 @@ public class HandController : MonoBehaviour
         allowMove = false;
         GameObject.Find("node5").GetComponent<Renderer>().material.SetColor("_Color", Color.red);
         rotation_correction = Quaternion.Euler(RotationCorrectionEuler);
-        //virtual_walls_max = new Vector3(0.3f, 0.95f, 0.3f);
-        //virtual_walls_min = new Vector3(-0.3f, -0.05f, -0.3f);
 }
 
     public string GetFingerGoalMessage()
@@ -110,8 +108,6 @@ public class HandController : MonoBehaviour
     {
         hand.position = goal_position;
         hand.rotation = goal_rotation;
-        //fingerR.localPosition = new Vector3(finger_goal, -0.0454f, 0f);
-        //fingerL.localPosition = new Vector3(-finger_goal, -0.0454f, 0f);
     }
 
     // update is called once per frame
@@ -181,28 +177,19 @@ public class HandController : MonoBehaviour
                     double nuckle_angle = 2 * Math.Acos((finger_base).w);
                     finger_angles_message += (finger_angle + nuckle_angle).ToString("F5") + '\t';
                 }
-                //finger_angles_message = finger_angles_message[0..^1]; taken care of in python
             }
             else
             {
                 use_robot_hand = false;
             }
 
-            //Lock the hand to pointing down
+            //Comment out to lock the hand to pointing down
             //goal_rotation = Quaternion.Euler(180, 180, 0);
 
             // keep the hand position within the virtual walls
-
             bool virtual_wall_collision = false;
             Debug.Log(hand.rotation * (new Vector3(0.10f, -0.1125f, -0.025f)) + hand.position);
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    goal_position_clamped[i] = Mathf.Clamp(goal_position[i], virtual_walls_min[i], virtual_walls_max[i]);
-            //    if (goal_position_clamped[i] == virtual_walls_max[i] || goal_position_clamped[i] == virtual_walls_min[i])
-            //    {
-            //        virtual_wall_collision = true;
-            //    }
-            //}
+
             Vector3 finger_scaling = new Vector3(0.015f + Mathf.Max(finger_goal, fingerR.localPosition[0]), 1f, 1f);
             List<Vector3> bounding_points = new List<Vector3>();
             bounding_points.AddRange(bounding_points_hand);
