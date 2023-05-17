@@ -1,5 +1,5 @@
 # TeleoperationUnity
-Instruction for use:
+## Instruction for use:
  1. Install git here: https://git-scm.com/download/win
  2. Install Unity Hub with a Unity account here: https://unity.com/download
  3. Clone the repository using git or download this project as a zip file.
@@ -17,4 +17,8 @@ Instruction for use:
 ## Robot Control:
 The Robotic Control folder contains scripts to interface with the Franka Emika Panda robot, either on hardware through the FrankaPy control structure (https://github.com/iamlab-cmu/frankapy) or in simulation, using the PandaGym bybullet based simulator (https://github.com/qgallouedec/panda-gym).
 
-### 
+### Franka Scripts:
+- UdpComms: Class to handle Udp Socket communication
+- franakpy_extensions: Additional classes to extend the FrankaPy control structure for continuous communciation.
+- VR_Teleoperation: Communication back-bone for interfacing with the Oculus application and controlling the Panda robot.
+
