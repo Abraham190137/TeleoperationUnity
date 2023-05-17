@@ -22,3 +22,7 @@ The Robotic Control folder contains scripts to interface with the Franka Emika P
 - franakpy_extensions: Additional classes to extend the FrankaPy control structure for continuous communciation.
 - VR_Teleoperation: Communication back-bone for interfacing with the Oculus application and controlling the Panda robot.
 
+### PandaGym Scripts:
+- UdpComms: Class to handle Udp Socket communication
+- simple_server: Upd server that prints all messages recieved from the Oculus application. Useful for debugging.
+- server_env: Simulates a Franka Emika Panda Robot in a Panda Gym task enviroment (block stacking). Interfaces with the Oculus application, allowing the VR user to control the Panda robot.
