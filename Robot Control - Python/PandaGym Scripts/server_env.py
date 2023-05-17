@@ -3,12 +3,16 @@ import time
 
 import UdpComms as U
 
-from panda_gym.envs.panda_tasks.panda_stack import PandaStackEnv
+# PandaGym underwent a major update durring development of this project. 
+# If you are using an older version of PandaGym, set OLD_PANDAGYM to True.
+OLD_PANDAGYM = False
 
-# If the above does not work to import the panda_gym task, try the following:
-# from panda_gym.envs.panda_tasks import PandaStackEnv
+if OLD_PANDAGYM:
+    from panda_gym.envs.panda_tasks.panda_stack import PandaStackEnv
+else:
+    from panda_gym.envs.panda_tasks import PandaStackEnv
 
-THIS_IP = "172.26.48.36" # IP adress of this machine
+THIS_IP = "172.26.116.22" # IP adress of this machine
 OCULUS_IP = "172.26.33.175" # IP adress of the Oculus Headset
 RESET_AT_TASK_COMPLETION = False # Resets the enviroemnt when the task (stack) is completed.
 
@@ -39,7 +43,11 @@ def generate_hand_message(hand_position, hand_rotation, finger_width):
 # Create UDP socket to use for sending (and receiving) Use THIS machines IP for udp.
 sock = U.UdpComms(udpIP=THIS_IP, sendIP = OCULUS_IP, portTX=8000, portRX=8001, enableRX=True, suppressWarnings=False)
 
-env = PandaStackEnv(render = True) # task enviroment
+if OLD_PANDAGYM:
+    env = PandaStackEnv(render = True) # task enviroment
+else:
+    env = PandaStackEnv(render_mode = "human") # task enviroment
+
 env.reset()
 position = env.robot.get_ee_position()
 gripper = env.robot.get_fingers_width()
@@ -123,7 +131,11 @@ while(True):
         error = np.zeros(4)
         error[:3] = position - env.robot.get_ee_position()
         error[3] = gripper - env.robot.get_fingers_width()
-        obs, reward, done, info = env.step(10*np.array([1, 1, 1, 0.07])*error)
+
+        if OLD_PANDAGYM:
+            obs, reward, done, info = env.step(10*np.array([1, 1, 1, 0.07])*error)
+        else:
+            obs, reward, done, _, info = env.step(10*np.array([1, 1, 1, 0.07])*error)
 
         # Reset the enviroment if the task is completed
         if RESET_AT_TASK_COMPLETION:

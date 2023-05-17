@@ -3,13 +3,22 @@ import time
 
 import UdpComms as U
 
-from panda_gym.envs.panda_tasks.panda_pick_and_place import PandaPickAndPlaceEnv
-from panda_gym.envs.panda_tasks.panda_stack import PandaStackEnv
+# PandaGym underwent a major update durring development of this project. 
+# If you are using an older version of PandaGym, set OLD_PANDAGYM to True.
+OLD_PANDAGYM = False
+
+if OLD_PANDAGYM:
+    from panda_gym.envs.panda_tasks.panda_stack import PandaStackEnv
+else:
+    from panda_gym.envs.panda_tasks import PandaStackEnv
     
 # Create UDP socket to use for sending (and receiving) Use THIS machines IP
 sock = U.UdpComms(udpIP="172.26.48.36", sendIP = "172.26.33.175", portTX=8000, portRX=8001, enableRX=True, suppressWarnings=False)
 
-env = PandaStackEnv(render = False) # task enviroment
+if OLD_PANDAGYM:
+    env = PandaStackEnv(render = False) # task enviroment
+else:
+    env = PandaStackEnv()
 env.reset()
 position = env.robot.get_ee_position()
 gripper = env.robot.get_fingers_width()
@@ -180,4 +189,8 @@ while True:
         error = np.zeros(4)
         error[:3] = position - env.robot.get_ee_position()
         error[3] = gripper - env.robot.get_fingers_width()
-        next_env_dict, reward, done, info = env.step(10*np.array([1, 1, 1, 0.07])*error)
+
+        if OLD_PANDAGYM:
+            next_env_dict, reward, done, info = env.step(10*np.array([1, 1, 1, 0.07])*error)
+        else:
+            next_env_dict, reward, done, _, info = env.step(10*np.array([1, 1, 1, 0.07])*error)
