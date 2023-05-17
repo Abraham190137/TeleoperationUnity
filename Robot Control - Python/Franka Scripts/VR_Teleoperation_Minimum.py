@@ -3,7 +3,7 @@ import numpy as np
 
 from frankapy import FrankaArm
 
-from frankpy_extensions import GotoPoseLive
+from frankapy_extensions import GotoPoseLive
 import UdpComms as U
 import threading
 
