@@ -22,9 +22,13 @@ This repository contains the source code for *OpenVR: Teleoperation for Manipula
 The Robotic Control folder contains scripts to interface with the Franka Emika Panda robot, either on hardware through the FrankaPy control structure (https://github.com/iamlab-cmu/frankapy) or in simulation, using the PandaGym bybullet based simulator (https://github.com/qgallouedec/panda-gym).
 
 ### Franka Scripts:
+- Teleoperation: Communication back-bone for interfacing with the Oculus application and controlling the Panda robot.
 - UdpComms: Class to handle Udp Socket communication
 - franakpy_extensions: Additional classes to extend the FrankaPy control structure for continuous communciation.
-- VR_Teleoperation: Communication back-bone for interfacing with the Oculus application and controlling the Panda robot.
+- VR_Teleopeartion_Minimum: Basic implimentation of the teleoperation system.
+- DetectObjectTeleop: Helper class for the vision system incharge of detecting objects.
+- realsense_ee_shifted.tf, realsense_intrinsics.intr: calibration matricies for the camera in the vision system. You will have to create your own, for your own camera's in your setup.
+- VR_Teleoperation_Vision: Teleoperation system with vision.
 
 ### PandaGym Scripts:
 - UdpComms: Class to handle Udp Socket communication
