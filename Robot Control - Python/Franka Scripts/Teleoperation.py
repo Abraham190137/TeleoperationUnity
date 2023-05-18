@@ -17,12 +17,18 @@ class Object:
 		self.rotation = rotation
 		self.velocity = np.array(velocity)
 		self.ang_velocity = ang_velocity
-		
+
 class Teleoperation:
-	def __init__(self, franka_IP, Oculus_IP, portTX = 8000, portRX=8001, girpper_offset = [0, 0, 0]) -> None:
+	def __init__(self, franka_IP, Oculus_IP, Hand_IP = None, portTX = 8000, portRX=8001, hand_portTX=8010, hand_portRX=8011, girpper_offset = [0, 0, 0]) -> None:
 		self.fa = FrankaArm()
 		# crate the communcation socket between franka and the oculus
 		self.sock = U.UdpComms(udpIP=franka_IP, sendIP = Oculus_IP, portTX=portTX, portRX=portRX, enableRX=True, suppressWarnings=True)
+		if Hand_IP is None:
+			self.use_robo_hand = False
+		else:
+			self.hand_sock = U.UdpComms(udpIP=franka_IP, sendIP = Hand_IP, portTX=hand_portTX, portRX=hand_portRX, enableRX=True, suppressWarnings=True)
+			self.use_robo_hand = True
+
 		self.PoseController = GotoPoseLive()
 		self.new_object_list = [] 
 		self.inventory_list = []
@@ -105,7 +111,14 @@ class Teleoperation:
 				goal_position -= self.gripper_offset
 				goal_rotation = np.array(goal_rotation[1:-1].split(', ')).astype(np.float)
 				goal_rotation = np.array([goal_rotation[3], -goal_rotation[2], goal_rotation[0], -goal_rotation[1]])
-				goal_width = 2*float(gripper_data)
+
+				print(gripper_data, type(gripper_data))
+				print(self.use_robo_hand)
+				if self.use_robo_hand:
+					goal_width = 0
+					self.hand_sock.SendData(gripper_data)
+				else:
+					goal_width = 2*float(gripper_data)
 
 				# set the pose rotation and translation to the goal values
 				goal_rotation_mat = pose.rotation_from_quaternion(goal_rotation)

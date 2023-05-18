@@ -23,13 +23,17 @@ class Object:
 
 if __name__ == "__main__":
 	# Reset Franka
+	USE_ROBOHAND = True # Set to True if the 5 fingered hand is used.
 	fa = FrankaArm()
 	fa.reset_joints()
 	fa.close_gripper()
 	fa.goto_gripper(0.04)
 
 	# Initalize the VR controller:
-	TeleopController = Teleoperation(franka_IP = "172.26.5.54", Oculus_IP = "172.26.33.175")
+	if USE_ROBOHAND:
+		TeleopController = Teleoperation(franka_IP = "172.26.5.54", Oculus_IP = "172.26.33.175", Hand_IP="172.26.50.162")
+	else:
+		TeleopController = Teleoperation(franka_IP = "172.26.5.54", Oculus_IP = "172.26.33.175")
 	TeleopController.start()
 	
 	#Object demo, generates a block every 10 seconds.
