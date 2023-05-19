@@ -29,6 +29,7 @@ The Robotic Control folder contains scripts to interface with the Franka Emika P
 - DetectObjectTeleop: Helper class for the vision system incharge of detecting objects.
 - realsense_ee_shifted.tf, realsense_intrinsics.intr: calibration matricies for the camera in the vision system. You will have to create your own, for your own camera's in your setup.
 - VR_Teleoperation_Vision: Teleoperation system with vision.
+- Five Fingered Hand Pi Script: Server script that runs on the Raspery Pi controlling the five fingered hand. 
 
 ### PandaGym Scripts:
 - UdpComms: Class to handle Udp Socket communication
