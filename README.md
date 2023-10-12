@@ -12,7 +12,7 @@ This repository contains the source code for *OpenVR: Teleoperation for Manipula
  6. In File -> Build Settings, select the Android platform and click "Switch Platform".
  7. Close Unity and Delete the Oculus folder in the TeleoperationUnity/Assets folder.
  10. Follow all of the instructions here to setup unity with the Oculus and enable developer mode on the Meta Quest 2: https://developer.oculus.com/documentation/unity/unity-gs-overview/
- 11. The main thing is to download the Oculus Integration SDK from here: https://developer.oculus.com/downloads/package/unity-integration
+ 11. Download the Oculus Integration SDK from here: https://developer.oculus.com/downloads/package/unity-integration
  12. Then follow instructions here to properly configure the package: https://developer.oculus.com/documentation/unity/unity-tutorial-hello-vr/
  13. Restart Unity.
  14. Delete the x86 folder and x_86.meta from TeleoperationUnity\Library\PackageCache\com.unity.robotics.urdf-importer@90f353e435\Runtime\UnityMeshImporter\Plugins\AssimpNet\Native\win.
