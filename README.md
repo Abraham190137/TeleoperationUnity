@@ -4,7 +4,7 @@
 This repository contains the source code for *OpenVR: Teleoperation for Manipulation*, which can be found at https://arxiv.org/abs/2305.09765
 
 ## Instruction for use:
- 1. Install git here: https://git-scm.com/download/win
+ 1. Install git here: https://git-scm.com/download/
  2. Install Unity Hub with a Unity account here: https://unity.com/download
  3. Clone the repository using git or download this project as a zip file.
  4. Add the project in Unity Hub, by selecting "Add Project from Disk" from the drop-down menu and navigating to the cloned repository
